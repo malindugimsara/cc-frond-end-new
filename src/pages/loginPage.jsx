@@ -1,11 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage(){
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const navigate = useNavigate();
+
     function handleLogin() {
         console.log("Email:", email);
         console.log("Password:", password);
@@ -19,10 +22,10 @@ function LoginPage(){
 
             const user = response.data.user;
             if(user.role =="admin"){
-                window.location.href = "/admin";
+                navigate("/admin");
             }
             else {
-                 window.location.href = "/"
+                navigate("/");
             }
                
         }).catch((error) => {
