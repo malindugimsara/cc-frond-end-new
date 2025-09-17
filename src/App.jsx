@@ -4,6 +4,8 @@ import LoginPage from './pages/loginPage'
 import AdminPage from './pages/adminPage'
 import { Toaster } from 'react-hot-toast'
 import TestPage from './test'
+import RegisterPage from './pages/register'
+import HomePage from './pages/homePage'
 
 function App() {
   
@@ -11,11 +13,11 @@ function App() {
     <BrowserRouter>
     <Toaster position="top-center" /> 
       <Routes path="/*">
-        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/*" element= {<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin/*" element={<AdminPage />} />
         <Route path="/test" element={<TestPage />} />
-        {/* Add more routes as needed */}
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
     </BrowserRouter>
   )

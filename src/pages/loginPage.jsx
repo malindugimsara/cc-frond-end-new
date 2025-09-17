@@ -48,6 +48,7 @@ function LoginPage(){
                     <input onChange={(e) => setPassword(e.target.value)}
                     className="w-[400px] h[50px] border border-white rounded-xl text-center m-[5px]" type="password" placeholder="password" />
                     <button onClick={handleLogin} className="w-[400px] h[50px] bg-green-500 text-white rounded-xl text-center m-[5px] cursor-pointer">Login</button>
+                    <button onClick={() => navigate("/register")} className="w-[400px] h[50px] bg-blue-500 text-white rounded-xl text-center m-[5px] cursor-pointer">Register</button>
                 </div>
             </div>
 
