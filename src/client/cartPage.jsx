@@ -1,0 +1,76 @@
+import { useEffect, useState } from "react";
+import { AddToCart, GetCart, RemoveFromCart } from "../../utils/cart";
+import { TbTrash } from "react-icons/tb";
+
+export default function CartPage() {
+    const[cartLoaded, setCartLoaded]=useState(false);
+    const [cart, setCart] = useState([]);
+    useEffect(() => {
+        if (!cartLoaded) {
+            const cart = GetCart();
+            setCart(cart);
+            setCartLoaded(true);
+        }
+    }, [cartLoaded]);
+
+    return (
+        <div className="w-full min-h-screen flex justify-center items-start bg-gray-100 p-10 ">
+            <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8 ">
+                <h2 className="text-3xl font-bold mb-6 text-gray-800 border-b pb-4">Shopping Cart</h2>
+                {
+                    cart.length === 0 ? (
+                        <p className="text-center text-gray-500 text-lg">Your cart is empty.</p>
+                    ) : (
+                        cart.map((item, index) => (
+                            <div key={index} className="flex items-center gap-6 py-4 border-b last:border-b-0 relative">
+                                
+                                <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg shadow" />
+                                <div className="flex-1">
+                                    <h3 className="text-2xl font-semibold text-gray-700">{item.name}</h3>
+                                    <p className="text-gray-400 text-m mb-1">{item.altname.join(" | ")}</p>
+                                    <div className="flex gap-20 mt-2 text-lg font-semibold ">
+                                        <span className="text-gray-600">Price: <span className="text-green-600 ">Rs.{item.price.toFixed(2)}</span></span>
+                                        <div className="flex items-center gap-4">
+                                            <button 
+                                                className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold"
+                                                onClick={() => {
+                                                    AddToCart(item, -1);
+                                                    setCartLoaded(false);
+                                                }}
+                                            >
+                                                -
+                                            </button>
+                                            <span className="text-gray-600 font-medium">Qty: <span className="text-blue-600">{item.quantity}</span></span>
+                                            <button 
+                                                className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold"
+                                                onClick={() => {
+                                                    AddToCart(item, 1);
+                                                    setCartLoaded(false);
+                                                }}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        <div className="text-gray-600 font-medium">
+                                            Total: <span className="text-purple-600">Rs.{(item.price * item.quantity).toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button 
+                                    onClick={() => {
+                                        RemoveFromCart(item.productId);
+                                        setCartLoaded(false);
+                                    }}
+                                    className="p-2 hover:bg-red-100 rounded-full transition-colors duration-200"
+                                    title="Remove item"
+                                >
+                                    <TbTrash className="text-red-500 text-2xl absolute bottom-[25px] right-[20px]" />
+                                </button>
+                            </div>
+                        ))
+                    )
+                }
+            </div>
+        </div>
+    );
+}

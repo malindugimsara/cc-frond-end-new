@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { VscLoading } from "react-icons/vsc";
 import ProductCard from "../component/productCard";
+import Loader from "../component/loader";
 
 export default function ProductPage() {
     const [productsList, setProductsList] = useState([]);
@@ -39,9 +40,7 @@ export default function ProductPage() {
                     }
                 </div>
                 : 
-                <div className="w-full h-full flex items-center justify-center">
-                    <VscLoading  className="text-[60px] animate-spin"/>
-                </div>
+                <Loader />
            }
         </div>
     );

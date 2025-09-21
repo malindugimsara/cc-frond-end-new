@@ -3,10 +3,17 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import Loader from "../component/loader";
+import ImageSlider from "../component/imageSlider";
+import { AddToCart } from "../../utils/cart";
 
-export default function ProductOverview(props) {
+export default function ProductOverview() {
 
     const params=useParams();
+
+    if(params.productId==null){
+        window.location.href="/products";
+    }
+
     const [product,setProduct]=useState(null);
     const [status,setStatus]=useState("loading"); // error, loaded
 
@@ -14,7 +21,8 @@ export default function ProductOverview(props) {
         if (status==="loading"){
             axios.get(import.meta.env.VITE_BACKEND_URL+"/api/product/"+params.productId)
             .then((response)=>{
-                setProduct(response.data);
+                console.log(response);
+                setProduct(response.data.product);
                 setStatus("loaded");
             })
             .catch((error)=>{
@@ -28,12 +36,47 @@ export default function ProductOverview(props) {
     return (
         <div className="w-full h-full">
             {
-                status==="loading" && <Loader/>
+                status==="loading" &&  <Loader />
             }
             {
-                status=="loaded" &&
-                <div className="w-full h-full">
-                    Product loaded
+                status=="loaded" && 
+                <div className="w-full h-full flex">
+                    <div className="w-[50%] h-full ">
+                       <ImageSlider images={product.images} />
+                    </div>
+                    <div className="w-[50%] h-full p-[40px] ">
+                        <div className="text-BLACK p-4">
+                            <h1 className="text-3xl font-bold text-center mb-4">{product.name}</h1>
+                            <h2 className="text-xl font-semibold text-center text-gray-500 mb-4">{product.altName.join(" | ")}</h2>
+                            <div className="w-full flex gap-2 justify-center items-cente mb-4">
+                                {
+                                    product.lablePrice > product.price?
+                                    (
+                                        <>
+                                            <p className="text-xl font-semibold line-through">RS.{product.lablePrice.toFixed(2)}</p>
+                                            <p className="text-xl font-semibold ">RS.{product.price.toFixed(2)}</p>
+                                        </>
+                                    ):
+                                    (
+                                       <p className="text-xl font-semibold mb-4">RS.{product.price.toFixed(2)}</p>
+                                    )
+
+                                }
+                            </div>
+                            <p className="text-xl font-semibold text-center text-gray-500  mb-2">{product.description}</p>
+                            <div className="w-full flex gap-4 justify-center items-center mt-4">
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-800 transition cursor-pointer" onClick={
+                                    ()=>{
+                                        AddToCart(product, 1);
+                                        toast.success("Product added to cart");
+                                    }}>
+                                    
+                                    Add to Cart</button>
+                                <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-800 transition cursor-pointer">Buy Now</button>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
             }
             {
