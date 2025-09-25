@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { AddToCart, GetCart, RemoveFromCart } from "../../utils/cart";
+import { AddToCart, GetCart, GetTotal, GetTotalForLablePrice, RemoveFromCart } from "../../utils/cart";
 import { TbTrash } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 export default function CartPage() {
     const[cartLoaded, setCartLoaded]=useState(false);
     const [cart, setCart] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         if (!cartLoaded) {
             const cart = GetCart();
@@ -70,6 +72,35 @@ export default function CartPage() {
                         ))
                     )
                 }
+                <div className="mt-6 text-right">
+                    <h3 className="text-xl font-bold text-gray-800">
+                        Total: Rs.{GetTotalForLablePrice().toFixed(2)}
+                    </h3>
+                </div>
+                <div className="mt-1 text-right">
+                    <h3 className="text-xl font-bold text-gray-800">
+                        Discount: Rs.{GetTotal().toFixed(2) - GetTotalForLablePrice().toFixed(2)}
+                    </h3>
+                </div>
+                <div className="mt-1 text-right">
+                    <h3 className="text-xl font-bold text-gray-800">
+                        Grand Total: Rs.{GetTotal().toFixed(2)}
+                    </h3>
+                </div>
+                <div className="mt-6 text-right">
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors duration-200"
+                    onClick={() => { navigate("/checkout",
+                        {
+                            state: {
+                                items: cart
+                            }
+                        }
+                       
+
+                    ); }}>
+                        Checkout
+                    </button>
+                </div>
             </div>
         </div>
     );
