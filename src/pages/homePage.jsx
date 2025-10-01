@@ -6,15 +6,19 @@ import ProductOverview from "../client/productOverview.jsx";
 import LoginPage from "./loginPage.jsx";
 import CartPage from "../client/cartPage.jsx";
 import Checkout from "../client/checkOut.jsx";
+import Home from "../client/home.jsx";
 
 
 export default function HomePage() {
     return (
         <div className='w-full h-screen max-h-screen'>
+            <Routes>
+                <Route path="/" element={<LoginPage />} />
+            </Routes>
             <Header />
             <div className='w-full h-[calc(100vh-75px)] min-h-[calc(100vh-75px)] '>
                 <Routes path="/*">
-                    <Route path="/" element={<LoginPage />} />
+                    <Route path="/home" element={<Home />} />
                     <Route path="/products" element={<ProductPage />} />
                     <Route path="/contact" element= {<Contact />} />
                     <Route path="/reviews" element={<div>Reviews</div>} />
