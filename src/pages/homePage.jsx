@@ -12,9 +12,6 @@ import Home from "../client/home.jsx";
 export default function HomePage() {
     return (
         <div className='w-full h-screen max-h-screen'>
-            <Routes>
-                <Route path="/" element={<LoginPage />} />
-            </Routes>
             <Header />
             <div className='w-full h-[calc(100vh-75px)] min-h-[calc(100vh-75px)] '>
                 <Routes path="/*">

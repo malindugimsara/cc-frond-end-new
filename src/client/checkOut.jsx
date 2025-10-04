@@ -21,56 +21,45 @@ export default function Checkout() {
                 quantity: item.quantity
             }))
         };
-
         console.log("Placing Order:", orderdata);
-
-        // Example: redirect to success page
         navigate("/order-success", { state: { order: orderdata } });
     }
 
     function GetTotal() {
-        let total = 0;
-        cart.forEach((product) => {
-            total += product.price * product.quantity;
-        });
-        return total; 
+        return cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
     }
 
     function GetTotalForLablePrice() {
-        let lablePrice = 0;
-        cart.forEach((product) => {
-            lablePrice += product.lableprice * product.quantity;
-        });
-        return lablePrice;
+        return cart.reduce((sum, p) => sum + p.lableprice * p.quantity, 0);
     }
 
     return (
         <div className="w-full min-h-screen flex justify-center items-start bg-gray-100 p-10">
-            <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8">
-                <h2 className="text-3xl font-bold mb-6 text-gray-800 border-b pb-4">Shopping Cart</h2>
+            <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg lg:p-8 p-6">
+                
+                {/* Title */}
+                <h2 className="text-3xl font-bold mb-6 text-gray-800 border-b pb-4">Checkout</h2>
 
+                {/* Cart Items */}
                 {cart.length === 0 ? (
                     <p className="text-center text-gray-500 text-lg">Your cart is empty.</p>
                 ) : (
                     cart.map((item, index) => (
-                        <div key={index} className="flex items-center gap-6 py-4 border-b last:border-b-0 relative">
+                        <div key={index} className="lg:flex items-center gap-6 py-4 border-b last:border-b-0 relative">
                             <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg shadow" />
                             <div className="flex-1">
-                                <h3 className="text-2xl font-semibold text-gray-700">{item.name}</h3>
+                                <h3 className="text-2xl font-semibold text-gray-700 pt-3 lg:pt-0">{item.name}</h3>
                                 <p className="text-gray-400 text-m mb-1">{item.altname.join(" | ")}</p>
-                                <div className="flex gap-20 mt-2 text-lg font-semibold">
+                                <div className="lg:flex gap-20 mt-2 text-lg font-semibold">
                                     <span className="text-gray-600">
                                         Price: <span className="text-green-600">Rs.{item.price.toFixed(2)}</span>
                                     </span>
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-4 pt-3 lg:pt-0">
                                         <button 
                                             className="w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 flex items-center justify-center font-bold"
                                             onClick={() => {
                                                 const newcart = [...cart];
-                                                newcart[index].quantity -= 1;
-                                                if (newcart[index].quantity <= 0) {
-                                                    newcart[index].quantity = 1;
-                                                }
+                                                newcart[index].quantity = Math.max(1, newcart[index].quantity - 1);
                                                 setCart(newcart);
                                                 setCartRefresh(!cartRefresh);
                                             }}
@@ -92,15 +81,14 @@ export default function Checkout() {
                                             +
                                         </button>
                                     </div>
-                                    <div className="text-gray-600 font-medium">
+                                    <div className="text-gray-600 font-medium pt-3 lg:pt-0">
                                         Total: <span className="text-purple-600">Rs.{(item.price * item.quantity).toFixed(2)}</span>
                                     </div>
                                 </div>
                             </div>
                             <button 
                                 onClick={() => {
-                                    const newcart = cart.filter((prdct) => prdct.productId !== item.productId);
-                                    setCart(newcart);
+                                    setCart(cart.filter((prdct) => prdct.productId !== item.productId));
                                 }}
                                 className="p-2 hover:bg-red-100 rounded-full transition-colors duration-200"
                                 title="Remove item"
@@ -111,25 +99,28 @@ export default function Checkout() {
                     ))
                 )}
 
-                <div className="mt-6 text-right">
-                    <h3 className="text-xl font-bold text-gray-800">
-                        Total: Rs.{GetTotalForLablePrice().toFixed(2)}
-                    </h3>
-                </div>
-                <div className="mt-1 text-right">
-                    <h3 className="text-xl font-bold text-gray-800">
-                        Discount: Rs.{(GetTotalForLablePrice() - GetTotal()).toFixed(2)}
-                    </h3>
-                </div>
-                <div className="mt-1 text-right">
-                    <h3 className="text-xl font-bold text-gray-800">
-                        Grand Total: Rs.{GetTotal().toFixed(2)}
-                    </h3>
+                {/* Totals */}
+                <div className="mr-3 lg:mr-0 text-lg">
+                    <div className="mt-6 text-right">
+                        <h3 className=" font-bold text-gray-600">
+                            Total: Rs.{GetTotalForLablePrice().toFixed(2)}
+                        </h3>
+                    </div>
+                    <div className="mt-1 text-right">
+                        <h3 className=" font-bold text-gray-600">
+                            Discount: Rs.{(GetTotalForLablePrice() - GetTotal()).toFixed(2)}
+                        </h3>
+                    </div>
+                    <div className="mt-1 text-right">
+                        <h3 className="font-bold text-blue-800">
+                            Grand Total: Rs.{GetTotal().toFixed(2)}
+                        </h3>
+                    </div>
                 </div>
 
                 {/* Shipping Info */}
-                <div>
-                    <h2 className="text-3xl font-bold mt-8 mb-4 text-gray-800 border-b pb-3">Shipping Information</h2>
+                <div className="ml-3 mt-8 lg:ml-0 lg:mt-8">
+                    <h2 className="text-2xl font-bold mb-4 text-gray-800 border-b pb-3">Shipping Information</h2>
 
                     <label className="block text-gray-700 font-medium mb-2" htmlFor="name">Full Name</label>
                     <input  
@@ -162,7 +153,8 @@ export default function Checkout() {
                     />
                 </div>
 
-                <div className="mt-6 text-right">
+                {/* Place Order */}
+                <div className="mt-6 text-right mb-4 lg:mb-0">
                     <button 
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors duration-200"
                         onClick={placeOrder}
